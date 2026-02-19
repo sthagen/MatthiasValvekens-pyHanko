@@ -11,8 +11,8 @@ from pyhanko.sign import signers
 from pyhanko.sign.timestamps import HTTPTimeStamper, TimestampRequestError
 from pyhanko.sign.timestamps.aiohttp_client import AIOHttpTimeStamper
 from pyhanko.sign.timestamps.common_utils import handle_tsp_response
-from test_data.samples import MINIMAL_ONE_FIELD
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_data.samples import MINIMAL_ONE_FIELD
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_HTTP_TS,
     DUMMY_TS,
     FROM_CA,
@@ -104,7 +104,7 @@ def test_handle_error_response(status_string, fail_info, err_resp):
 
 
 def test_handle_bad_nonce():
-    from test_utils.signing_commons import DUMMY_TS
+    from pyhanko_testing_commons.test_utils.signing_commons import DUMMY_TS
 
     message = b'Hello world!'
     nonce, req = DUMMY_TS.request_cms(

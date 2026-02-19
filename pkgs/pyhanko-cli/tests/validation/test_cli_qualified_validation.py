@@ -8,7 +8,7 @@ from asn1crypto import pem
 from certomancer.registry import CertLabel, EntityLabel, ServiceLabel
 from pyhanko.cli import cli_root
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     MINIMAL,
     MINIMAL_ONE_FIELD,
@@ -41,7 +41,7 @@ def signer_cert_label():
 @pytest.fixture
 def tl_cache(pki_arch):
     from pyhanko.sign.validation.qualified.eutl_fetch import FileSystemTLCache
-    from test_data.certomancer_trust_lists import (
+    from pyhanko_testing_commons.test_data.certomancer_trust_lists import (
         certomancer_lotl,
         certomancer_pki_as_trusted_list,
     )

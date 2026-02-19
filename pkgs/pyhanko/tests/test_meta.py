@@ -13,7 +13,12 @@ from pyhanko.pdf_utils.metadata import model, xmp_xml
 from pyhanko.pdf_utils.misc import StringWithLanguage
 from pyhanko.pdf_utils.reader import HistoricalResolver, PdfFileReader
 from pyhanko.pdf_utils.writer import PdfFileWriter, copy_into_new_writer
-from test_data.samples import MINIMAL, PDF_DATA_DIR, TEST_DIR, VECTOR_IMAGE_PDF
+from pyhanko_testing_commons.test_data.samples import (
+    MINIMAL,
+    PDF_DATA_DIR,
+    TEST_DIR,
+    VECTOR_IMAGE_PDF,
+)
 
 try:
     import zoneinfo

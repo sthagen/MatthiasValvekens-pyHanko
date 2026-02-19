@@ -15,7 +15,7 @@ from pyhanko.pdf_utils.crypt import (
 from pyhanko.pdf_utils.crypt.permissions import PubKeyPermissions
 from pyhanko.pdf_utils.crypt.pubkey import RecipientEncryptionPolicy
 from pyhanko.pdf_utils.reader import PdfFileReader
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL,
     MINIMAL_AES256,
     MINIMAL_PUBKEY_AES256,

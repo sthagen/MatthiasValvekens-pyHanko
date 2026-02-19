@@ -9,7 +9,7 @@ from pyhanko.pdf_utils.reader import PdfFileReader
 from pyhanko.sign import PdfSignatureMetadata, SimpleSigner, sign_pdf
 from pyhanko.sign.timestamps import DummyTimeStamper
 from pyhanko_certvalidator.registry import SimpleCertificateStore
-from test_data.samples import MINIMAL, TESTING_CA
+from pyhanko_testing_commons.test_data.samples import MINIMAL, TESTING_CA
 
 from .conftest import (
     DUMMY_PASSPHRASE,

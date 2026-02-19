@@ -5,8 +5,12 @@ from pyhanko.cli import cli_root
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.pdf_utils.reader import PdfFileReader
 from pyhanko.sign import PdfSignatureMetadata, sign_pdf
-from test_data.samples import MINIMAL, MINIMAL_TWO_FIELDS, MINIMAL_TWO_PAGES
-from test_utils.signing_commons import FROM_CA
+from pyhanko_testing_commons.test_data.samples import (
+    MINIMAL,
+    MINIMAL_TWO_FIELDS,
+    MINIMAL_TWO_PAGES,
+)
+from pyhanko_testing_commons.test_utils.signing_commons import FROM_CA
 
 from .conftest import INPUT_PATH
 

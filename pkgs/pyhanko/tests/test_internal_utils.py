@@ -32,7 +32,7 @@ from pyhanko.pdf_utils.reader import (
     read_next_end_line,
 )
 from pyhanko.pdf_utils.rw_common import PdfHandler
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     FILE_WITH_EMBEDDED_FONT,
     MINIMAL,
     MINIMAL_ONE_FIELD,

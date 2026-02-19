@@ -9,7 +9,7 @@ from pyhanko.pdf_utils import crypt, embed, generic, misc, writer
 from pyhanko.pdf_utils.crypt import AuthStatus
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.pdf_utils.reader import PdfFileReader
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL,
     MINIMAL_AES256,
     PDF_DATA_DIR,

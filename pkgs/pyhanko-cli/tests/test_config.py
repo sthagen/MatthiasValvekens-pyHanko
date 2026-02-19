@@ -31,7 +31,11 @@ from pyhanko.sign.signers.pdf_cms import (
 )
 from pyhanko.stamp import QRStampStyle, TextStampStyle
 from pyhanko_certvalidator.registry import SimpleTrustManager
-from test_data.samples import CRYPTO_DATA_DIR, TEST_DIR, TESTING_CA_DIR
+from pyhanko_testing_commons.test_data.samples import (
+    CRYPTO_DATA_DIR,
+    TEST_DIR,
+    TESTING_CA_DIR,
+)
 
 
 def _parse_cli_config(config_string):

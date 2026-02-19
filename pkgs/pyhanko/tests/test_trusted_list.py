@@ -44,12 +44,19 @@ from pyhanko_certvalidator.policy_decl import (
     RevocationCheckingPolicy,
     RevocationCheckingRule,
 )
-from test_data.certomancer_trust_lists import (
+from pyhanko_testing_commons.test_data.certomancer_trust_lists import (
     PathRetainingClient,
     certomancer_lotl,
 )
-from test_data.samples import TEST_DIR, TESTING_CA_QUALIFIED
-from test_utils.signing_commons import ECC_INTERM_CERT, FROM_CA, INTERM_CERT
+from pyhanko_testing_commons.test_data.samples import (
+    TEST_DIR,
+    TESTING_CA_QUALIFIED,
+)
+from pyhanko_testing_commons.test_utils.signing_commons import (
+    ECC_INTERM_CERT,
+    FROM_CA,
+    INTERM_CERT,
+)
 from xsdata.formats.dataclass.parsers import XmlParser
 from xsdata.formats.dataclass.parsers.config import ParserConfig
 

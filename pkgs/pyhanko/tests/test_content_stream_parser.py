@@ -5,7 +5,7 @@ from pyhanko.pdf_utils.content_stream_parser import parse_content_stream
 from pyhanko.pdf_utils.generic import NullObject, NumberObject, StreamObject
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.pdf_utils.misc import PdfReadError
-from test_data.samples import MINIMAL
+from pyhanko_testing_commons.test_data.samples import MINIMAL
 
 
 def _wrap_as_streams(w: IncrementalPdfFileWriter, *data):

@@ -66,7 +66,7 @@ from pyhanko_certvalidator.policy_decl import (
     DisallowWeakAlgorithmsPolicy,
 )
 from pyhanko_certvalidator.registry import SimpleCertificateStore
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     CRYPTO_DATA_DIR,
     MINIMAL,
@@ -79,7 +79,7 @@ from test_data.samples import (
     TESTING_CA_ED25519,
     TESTING_CA_ERRORS,
 )
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DSA_INTERM_CERT,
     DSA_ROOT_CERT,
     DUMMY_TS,

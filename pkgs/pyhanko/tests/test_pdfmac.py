@@ -47,15 +47,18 @@ from pyhanko.sign.validation import (
 )
 from pyhanko.sign.validation.errors import DisallowedAlgorithmError
 from pyhanko_certvalidator import ValidationContext
-from requests_mock import Mocker
-from test_data.samples import PUBKEY_TEST_DECRYPTER, TESTING_CA_ECDSA
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_data.samples import (
+    PUBKEY_TEST_DECRYPTER,
+    TESTING_CA_ECDSA,
+)
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_TS,
     ECC_ROOT_CERT,
     FROM_ECC_CA,
     simple_ecc_v_context,
     val_trusted,
 )
+from requests_mock import Mocker
 
 DUMMY_PASSWORD = "secret"
 

@@ -12,8 +12,10 @@ from freezegun import freeze_time
 from pyhanko.sign.general import SigningError
 from pyhanko.sign.signers import csc_signer
 from pyhanko_certvalidator.sig_validate import DefaultSignatureValidator
-from test_data.samples import CERTOMANCER, TESTING_CA
-from test_utils.csc_utils.csc_dummy_client import CSCDummyClientAuthManager
+from pyhanko_testing_commons.test_data.samples import CERTOMANCER, TESTING_CA
+from pyhanko_testing_commons.test_utils.csc_utils.csc_dummy_client import (
+    CSCDummyClientAuthManager,
+)
 
 SIGNER_B64 = """
 MIIEMDCCAxigAwIBAgICEAEwDQYJKoZIhvcNAQELBQAwWTELMAkGA1UEBhMCQkUxFDASBgNVBAoM

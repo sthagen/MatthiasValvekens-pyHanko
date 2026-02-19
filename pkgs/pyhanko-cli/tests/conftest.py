@@ -29,7 +29,7 @@ from pyhanko_certvalidator.policy_decl import (
     CertRevTrustPolicy,
 )
 from pyhanko_certvalidator.registry import SimpleTrustManager
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL,
     TESTING_CA,
     TESTING_CA_ECDSA,
@@ -38,7 +38,7 @@ from test_data.samples import (
     TESTING_CA_QUALIFIED,
 )
 
-pytest_plugins = ["test_utils.pkcs11_utils.fixtures"]
+pytest_plugins = ["pyhanko_testing_commons.test_utils.pkcs11_utils.fixtures"]
 
 
 INPUT_PATH = 'input.pdf'

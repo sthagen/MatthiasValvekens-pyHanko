@@ -22,8 +22,12 @@ from pyhanko_certvalidator.registry import (
     SimpleCertificateStore,
     SimpleTrustManager,
 )
-from test_data.samples import CERTOMANCER, MINIMAL_ONE_FIELD, SAMPLE_GROUP_ATTR
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_data.samples import (
+    CERTOMANCER,
+    MINIMAL_ONE_FIELD,
+    SAMPLE_GROUP_ATTR,
+)
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_POLICY_ID,
     DUMMY_TS,
     FROM_CA,

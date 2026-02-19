@@ -16,14 +16,17 @@ from pyhanko.pdf_utils.layout import (
 )
 from pyhanko.pdf_utils.misc import FormFillingError
 from pyhanko.pdf_utils.reader import PdfFileReader
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     EXPECTED_OUTPUT_DIR,
     MINIMAL,
     MINIMAL_XREF,
     SIMPLE_FORM,
     TEST_DIR,
 )
-from test_utils.layout_test_utils import compare_output, with_layout_comparison
+from pyhanko_testing_commons.test_utils.layout_test_utils import (
+    compare_output,
+    with_layout_comparison,
+)
 
 
 @pytest.mark.parametrize(

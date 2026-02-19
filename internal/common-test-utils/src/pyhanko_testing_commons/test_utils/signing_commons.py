@@ -17,7 +17,8 @@ from pyhanko.sign.validation import (
 from pyhanko_certvalidator import ValidationContext
 from pyhanko_certvalidator.policy_decl import DisallowWeakAlgorithmsPolicy
 from pyhanko_certvalidator.registry import SimpleCertificateStore
-from test_data.samples import (
+
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     CRYPTO_DATA_DIR,
     TESTING_CA,

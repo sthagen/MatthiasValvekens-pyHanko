@@ -2,7 +2,10 @@ import warnings
 
 import pytest
 from pyhanko.cli import cli_root
-from test_data.samples import MINIMAL_AES256, MINIMAL_SLIGHTLY_BROKEN
+from pyhanko_testing_commons.test_data.samples import (
+    MINIMAL_AES256,
+    MINIMAL_SLIGHTLY_BROKEN,
+)
 
 from .conftest import INPUT_PATH, _write_config
 

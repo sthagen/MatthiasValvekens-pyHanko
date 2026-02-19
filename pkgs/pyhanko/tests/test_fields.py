@@ -14,7 +14,7 @@ from pyhanko.sign import fields, signers
 from pyhanko.sign.fields import InvisSigSettings, VisibleSigSettings
 from pyhanko.sign.general import SigningError
 from pyhanko_certvalidator.registry import SimpleCertificateStore
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL,
     MINIMAL_ONE_FIELD,
     MINIMAL_TWO_FIELDS,
@@ -23,7 +23,7 @@ from test_data.samples import (
     TESTING_CA_ERRORS,
     simple_page,
 )
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_utils.signing_commons import (
     FROM_CA,
     INTERM_CERT,
     ROOT_CERT,

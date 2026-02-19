@@ -16,7 +16,7 @@ from pyhanko_certvalidator.registry import (
     SimpleCertificateStore,
     SimpleTrustManager,
 )
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL,
     MINIMAL_AES256,
 )

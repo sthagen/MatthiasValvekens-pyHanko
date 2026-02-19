@@ -20,8 +20,8 @@ from pyhanko.sign.validation import (
     async_validate_pdf_signature,
 )
 from pyhanko_certvalidator import CertificateValidator
-from test_data.samples import MINIMAL
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_data.samples import MINIMAL
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_HTTP_TS,
     DUMMY_TS,
     FROM_CA,

@@ -76,7 +76,7 @@ from pyhanko_certvalidator.registry import (
     SimpleCertificateStore,
     SimpleTrustManager,
 )
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     MINIMAL,
     MINIMAL_ONE_FIELD,
@@ -87,7 +87,7 @@ from test_data.samples import (
     TESTING_CA,
     UNRELATED_TSA,
 )
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_HTTP_TS,
     DUMMY_HTTP_TS_VARIANT,
     DUMMY_POLICY_ID,

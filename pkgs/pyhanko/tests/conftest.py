@@ -1,6 +1,6 @@
 import pytest
 
-pytest_plugins = ["test_utils.pkcs11_utils.fixtures"]
+pytest_plugins = ["pyhanko_testing_commons.test_utils.pkcs11_utils.fixtures"]
 
 
 @pytest.fixture

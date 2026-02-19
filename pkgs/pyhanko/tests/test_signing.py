@@ -61,7 +61,7 @@ from pyhanko_certvalidator.registry import (
     SimpleTrustManager,
 )
 from pyhanko_certvalidator.util import get_pyca_cryptography_hash
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     CRYPTO_DATA_DIR,
     MINIMAL,
@@ -70,7 +70,7 @@ from test_data.samples import (
     TESTING_CA,
     VECTOR_IMAGE_PDF,
 )
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_HTTP_TS,
     DUMMY_TS,
     FIXED_OCSP,

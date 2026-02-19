@@ -75,14 +75,14 @@ from pyhanko_certvalidator.registry import (
     SimpleTrustManager,
 )
 from pyhanko_certvalidator.validate import async_validate_path
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     MINIMAL_ONE_FIELD,
     TESTING_CA,
     TESTING_CA_QUALIFIED,
     UNRELATED_TSA,
 )
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_HTTP_TS_VARIANT,
     DUMMY_TS,
     DUMMY_TS2,
@@ -184,7 +184,7 @@ ESEAL_SIGNER = signers.SimpleSigner(
 
 def _testing_ca_registry():
     from pyhanko.sign.validation.qualified import eutl_parse
-    from test_data.certomancer_trust_lists import (
+    from pyhanko_testing_commons.test_data.certomancer_trust_lists import (
         certomancer_pki_as_trusted_list,
     )
 

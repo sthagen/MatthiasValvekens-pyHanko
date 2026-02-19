@@ -28,13 +28,16 @@ from pyhanko.stamp import (
     qr_stamp_file,
     text_stamp_file,
 )
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     EXPECTED_OUTPUT_DIR,
     MINIMAL_PATH,
     PDF_DATA_DIR,
     TEST_DIR,
 )
-from test_utils.layout_test_utils import compare_output, with_layout_comparison
+from pyhanko_testing_commons.test_utils.layout_test_utils import (
+    compare_output,
+    with_layout_comparison,
+)
 
 FONT_DIR = f'{TEST_DIR}/data/fonts'
 

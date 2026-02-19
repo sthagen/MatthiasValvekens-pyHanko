@@ -38,7 +38,7 @@ from pyhanko.pdf_utils.crypt.standard import StandardAESGCMCryptFilter
 from pyhanko.pdf_utils.generic import pdf_name
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.pdf_utils.reader import PdfFileReader
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     CERTOMANCER,
     MINIMAL,
     MINIMAL_AES256,

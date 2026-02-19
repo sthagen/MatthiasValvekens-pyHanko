@@ -14,7 +14,7 @@ from pyhanko.sign.signers.pdf_signer import (
     SigDSSPlacementPreference,
 )
 from pyhanko.sign.validation import validate_pdf_signature
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL_AES256,
     MINIMAL_ONE_FIELD,
     MINIMAL_ONE_FIELD_AES256,
@@ -25,7 +25,7 @@ from test_data.samples import (
     PDF_DATA_DIR,
     PUBKEY_SELFSIGNED_DECRYPTER,
 )
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_utils.signing_commons import (
     DUMMY_HTTP_TS,
     FROM_CA,
     FROM_ED25519_CA,

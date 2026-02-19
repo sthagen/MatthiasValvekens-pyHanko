@@ -14,7 +14,7 @@ from pyhanko.pdf_utils.xref import (
     parse_xref_stream,
     read_object_header,
 )
-from test_data.samples import (
+from pyhanko_testing_commons.test_data.samples import (
     MINIMAL,
     MINIMAL_AES256,
     MINIMAL_TWO_FIELDS_TAGGED,

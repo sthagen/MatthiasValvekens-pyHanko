@@ -7,7 +7,7 @@ from pyhanko.cli.commands.signing.pkcs11_cli import (
     P11_PIN_ENV_VAR,
     P11_SIGNING_PIN_ENV_VAR,
 )
-from test_utils.pkcs11_utils.config import P11TestConfig
+from pyhanko_testing_commons.test_utils.pkcs11_utils.config import P11TestConfig
 
 from .conftest import (
     INPUT_PATH,

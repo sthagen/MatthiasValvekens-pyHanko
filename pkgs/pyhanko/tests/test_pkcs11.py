@@ -30,8 +30,8 @@ from pyhanko.sign.pkcs11 import (
     find_token,
 )
 from pyhanko_certvalidator.registry import SimpleCertificateStore
-from test_data.samples import MINIMAL, TESTING_CA
-from test_utils.signing_commons import (
+from pyhanko_testing_commons.test_data.samples import MINIMAL, TESTING_CA
+from pyhanko_testing_commons.test_utils.signing_commons import (
     async_val_trusted,
     val_trusted,
 )

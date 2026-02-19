@@ -43,7 +43,7 @@ from pyhanko_certvalidator.fetchers.requests_fetchers import (
     RequestsOCSPFetcher,
 )
 from pyhanko_certvalidator.registry import SimpleCertificateStore
-from test_data.samples import MINIMAL_ONE_FIELD
+from pyhanko_testing_commons.test_data.samples import MINIMAL_ONE_FIELD
 
 logger = logging.getLogger(__name__)
 
