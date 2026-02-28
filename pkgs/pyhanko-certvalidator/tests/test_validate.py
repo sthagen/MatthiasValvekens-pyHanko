@@ -878,17 +878,16 @@ class MockRequestsCertificateFetcher(
     def __init__(self, *args, order, **kwargs):
         super().__init__(*args, **kwargs)
         self.order = order
+        root_ca = load_cert_object('multilayer', 'certs', 'root.cert.pem')
+        middle_ca = load_cert_object('multilayer', 'certs', 'interm1.cert.pem')
+        end_ca = load_cert_object('multilayer', 'certs', 'interm2.cert.pem')
+        self.certs = {'root': root_ca, 'middle': middle_ca, 'end': end_ca}
 
     async def fetch_certs(self, *args, **kwargs) -> Iterable[x509.Certificate]:
-        root_ca = load_cert_object('testing-aia', 'brazilian_root_ca_v5')
-        middle_ca = load_cert_object('testing-aia', 'ca_brazilian_fro_v4')
-        end_ca = load_cert_object('testing-aia', 'ca_serprorfbv5')
-        certs = {'root': root_ca, 'middle': middle_ca, 'end': end_ca}
-
         return [
-            certs[self.order[0]],
-            certs[self.order[1]],
-            certs[self.order[2]],
+            self.certs[self.order[0]],
+            self.certs[self.order[1]],
+            self.certs[self.order[2]],
         ]
 
 
@@ -904,19 +903,19 @@ class MockRequestsCertificateFetcher(
     ],
 )
 @pytest.mark.asyncio
-async def test_building_trust_path_with_pkcs7_in_different_orders(cert_order):
+async def test_building_trust_path_fetched_in_different_orders(cert_order):
     trust_path = [
-        'Autoridade Certificadora Raiz Brasileira v5',
-        'AC Secretaria da Receita Federal do Brasil v4',
-        'Autoridade Certificadora SERPRORFBv5',
+        'Root CA',
+        'Intermediate CA 1',
+        'Intermediate CA 2',
     ]
 
-    serpro_root = load_cert_object('testing-aia', 'brazilian_root_ca_v5')
+    root = load_cert_object('multilayer', 'certs', 'root.cert.pem')
 
     trust_manager = SimpleTrustManager.build(
-        extra_trust_roots=[serpro_root],
+        trust_roots=[root],
     )
-    cert = load_cert_object('testing-aia', 'repositorio.serpro.gov.br')
+    cert = load_cert_object('multilayer', 'certs', 'alice.cert.pem')
     registry = CertificateRegistry.build(
         certs=(cert,),
         cert_fetcher=MockRequestsCertificateFetcher(order=cert_order),

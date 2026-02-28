@@ -23,14 +23,16 @@ ac_path = os.path.join(
 with open(ac_path, 'rb') as inf:
     ATTRIBUTE_CERT = cms.AttributeCertificateV2.load(inf.read())
 
-with open(os.path.join(FIXTURES_DIR, 'PostaSrbijeCA1.der'), 'rb') as f:
-    POSTA_SRBIJE_CERT = x509.Certificate.load(f.read())
+with open(
+    os.path.join(FIXTURES_DIR, 'testing-aia', 'with-ldap-urls.der'), 'rb'
+) as f:
+    WITH_LDAP_URLS = x509.Certificate.load(f.read())
 
 
 @pytest.mark.parametrize("content_type", (None, *ACCEPTABLE_CERT_DER_ALIASES))
 def test_unpack_cert_content_der(content_type):
     certs_returned = unpack_cert_content(
-        response_data=POSTA_SRBIJE_CERT.dump(),
+        response_data=WITH_LDAP_URLS.dump(),
         content_type=content_type,
         permit_pem=False,
         url="http://example.com",
@@ -143,7 +145,7 @@ def test_unpack_cert_content_pkcs7_pem():
 
 
 def test_crl_distribution_point_enumeration_skip_ldap():
-    (dist_point,) = POSTA_SRBIJE_CERT.crl_distribution_points_value
+    (dist_point,) = WITH_LDAP_URLS.crl_distribution_points_value
     (url,) = enumerate_delivery_point_urls(dist_point)
     assert url.startswith('http://')
 
@@ -154,7 +156,7 @@ def test_crl_distribution_point_enumeration_skip_relative():
             {
                 'distribution_point': x509.DistributionPointName(
                     name='name_relative_to_crl_issuer',
-                    value=POSTA_SRBIJE_CERT.issuer.chosen[0],
+                    value=WITH_LDAP_URLS.issuer.chosen[0],
                 )
             }
         )
@@ -171,7 +173,7 @@ def test_crl_distribution_point_enumeration_skip_non_uri():
                     value=[
                         x509.GeneralName(
                             name='directory_name',
-                            value=POSTA_SRBIJE_CERT.issuer,
+                            value=WITH_LDAP_URLS.issuer,
                         )
                     ],
                 )
@@ -182,10 +184,8 @@ def test_crl_distribution_point_enumeration_skip_non_uri():
 
 
 def test_gather_issuer_urls_cert():
-    urls = gather_aia_issuer_urls(POSTA_SRBIJE_CERT)
-    assert list(urls) == [
-        'http://repository.ca.posta.rs/ca-sertifikati/PostaSrbijeCARoot.der'
-    ]
+    urls = gather_aia_issuer_urls(WITH_LDAP_URLS)
+    assert list(urls) == ['http://repo.ca.example.com']
 
 
 def test_gather_issuer_urls_ac():
