@@ -1,98 +1,14 @@
 # coding: utf-8
 
-from datetime import datetime
-
 import pytest
-from asn1crypto.util import timezone
 from freezegun import freeze_time
 from pyhanko_certvalidator import (
     CertificateValidator,
     PKIXValidationParams,
     ValidationContext,
 )
-from pyhanko_certvalidator.errors import (
-    InvalidCertificateError,
-    PathValidationError,
-)
 
 from .common import load_cert_object, load_nist_cert
-
-
-@pytest.mark.asyncio
-async def test_basic_certificate_validator_tls():
-    cert = load_cert_object('mozilla.org.crt')
-    other_certs = [load_cert_object('digicert-sha2-secure-server-ca.crt')]
-
-    moment = datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-
-    context = ValidationContext(moment=moment)
-    validator = CertificateValidator(cert, other_certs, context)
-
-    await validator.async_validate_tls('www.mozilla.org')
-
-
-@pytest.mark.asyncio
-async def test_basic_certificate_validator_tls_expired():
-    cert = load_cert_object('mozilla.org.crt')
-    other_certs = [load_cert_object('digicert-sha2-secure-server-ca.crt')]
-
-    moment = datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-
-    context = ValidationContext(moment=moment)
-    validator = CertificateValidator(cert, other_certs, context)
-
-    with pytest.raises(PathValidationError, match='expired'):
-        await validator.async_validate_tls('www.mozilla.org')
-
-
-@pytest.mark.asyncio
-async def test_basic_certificate_validator_tls_invalid_hostname():
-    cert = load_cert_object('mozilla.org.crt')
-    other_certs = [load_cert_object('digicert-sha2-secure-server-ca.crt')]
-
-    moment = datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-
-    context = ValidationContext(moment=moment)
-    validator = CertificateValidator(cert, other_certs, context)
-
-    with pytest.raises(InvalidCertificateError, match='not valid'):
-        await validator.async_validate_tls('google.com')
-
-
-@pytest.mark.asyncio
-async def test_basic_certificate_validator_tls_invalid_key_usage():
-    cert = load_cert_object('mozilla.org.crt')
-    other_certs = [load_cert_object('digicert-sha2-secure-server-ca.crt')]
-
-    moment = datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-
-    context = ValidationContext(moment=moment)
-    validator = CertificateValidator(cert, other_certs, context)
-
-    with pytest.raises(InvalidCertificateError, match='for the purpose'):
-        await validator.async_validate_usage({'crl_sign'})
-
-
-@pytest.mark.asyncio
-async def test_basic_certificate_validator_tls_whitelist():
-    cert = load_cert_object('mozilla.org.crt')
-    other_certs = [load_cert_object('digicert-sha2-secure-server-ca.crt')]
-
-    moment = datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-
-    context = ValidationContext(
-        whitelisted_certs=[cert.sha1_fingerprint], moment=moment
-    )
-    validator = CertificateValidator(cert, other_certs, context)
-
-    # If whitelist does not work, this will raise exception for expiration
-    await validator.async_validate_tls('www.mozilla.org')
-
-    # If whitelist does not work, this will raise exception for hostname
-    await validator.async_validate_tls('google.com')
-
-    # If whitelist does not work, this will raise exception for key usage
-    await validator.async_validate_usage({'crl_sign'})
 
 
 @freeze_time('2022-05-01')

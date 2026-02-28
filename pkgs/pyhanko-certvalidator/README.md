@@ -35,7 +35,6 @@ options, including: validation at a specific moment in time, whitelisting and re
      - Policy mapping
      - Inhibit anyPolicy
    - Failure on unknown/unsupported critical extensions
- - TLS/SSL server validation
  - Whitelisting certificates
  - Blacklisting hash algorithms
  - Revocation checks
@@ -96,7 +95,7 @@ The test cases for the library are comprised of:
 
  - [Public Key Interoperability Test Suite from NIST](http://csrc.nist.gov/groups/ST/crypto_apps_infra/pki/pkitesting.html)
  - [OCSP tests from OpenSSL](https://github.com/openssl/openssl/blob/master/test/recipes/80-test_ocsp.t)
- - Various certificates generated for TLS certificate validation
+ - Various certificates generated for bespoke X.509 certificate validation scenarios
 
 
 Existing releases can be found at https://pypi.org/project/pyhanko-certvalidator.

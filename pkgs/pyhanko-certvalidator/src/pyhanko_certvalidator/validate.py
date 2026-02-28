@@ -150,56 +150,6 @@ async def async_validate_path(
     )
 
 
-def validate_tls_hostname(
-    validation_context: ValidationContext, cert: x509.Certificate, hostname: str
-):
-    """
-    Validates the end-entity certificate from a
-    pyhanko_certvalidator.path.ValidationPath object to ensure that the certificate
-    is valid for the hostname provided and that the certificate is valid for
-    the purpose of a TLS connection.
-
-    THE CERTIFICATE PATH MUST BE VALIDATED SEPARATELY VIA validate_path()!
-
-    :param validation_context:
-        A pyhanko_certvalidator.context.ValidationContext object to use for
-        configuring validation behavior
-
-    :param cert:
-        An asn1crypto.x509.Certificate object returned from validate_path()
-
-    :param hostname:
-        A unicode string of the TLS server hostname
-
-    :raises:
-        pyhanko_certvalidator.errors.InvalidCertificateError - when the certificate is not valid for TLS or the hostname
-    """
-
-    if validation_context.is_whitelisted(cert):
-        return
-
-    if not cert.is_valid_domain_ip(hostname):
-        raise InvalidCertificateError(
-            f"The X.509 certificate provided is not valid for {hostname}. "
-            f"Valid hostnames include: {', '.join(cert.valid_domains)}."
-        )
-
-    bad_key_usage = (
-        cert.key_usage_value
-        and 'digital_signature' not in cert.key_usage_value.native
-    )
-    bad_ext_key_usage = (
-        cert.extended_key_usage_value
-        and 'server_auth' not in cert.extended_key_usage_value.native
-    )
-
-    if bad_key_usage or bad_ext_key_usage:
-        raise InvalidCertificateError(
-            "The X.509 certificate provided is not valid for securing TLS "
-            "connections"
-        )
-
-
 def validate_usage(
     validation_context: ValidationContext,
     cert: x509.Certificate,

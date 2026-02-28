@@ -21,8 +21,8 @@ from .common import load_cert_object
 
 
 def test_build_paths_custom_ca_certs():
-    cert = load_cert_object('mozilla.org.crt')
-    other_certs = [load_cert_object('digicert-sha2-secure-server-ca.crt')]
+    cert = load_cert_object('testing-ca-ed25519', 'signer.cert.pem')
+    other_certs = [load_cert_object('testing-ca-ed25519', 'interm.cert.pem')]
 
     builder = PathBuilder(
         trust_manager=SimpleTrustManager.build(trust_roots=other_certs),
@@ -34,14 +34,14 @@ def test_build_paths_custom_ca_certs():
     path = paths[0]
     assert 2 == len(path)
     assert [item.subject.sha1 for item in path] == [
-        b"\x10_\xa6z\x80\x08\x9d\xb5'\x9f5\xce\x83\x0bC\x88\x9e\xa3\xc7\r",
-        b'I\xac\x03\xf8\xf3Km\xca)V)\xf2I\x9a\x98\xbe\x98\xdc.\x81',
+        b'Xm\xb3f\xac[T\x13\xbaP$\x13\xfb\x93L\xf0\x9ex\x83V',
+        b'\x8d\x19\xc0\xcdx\x84[\x7f\xe3/$\x86B\xfc\x83\xd9Kzm\x97',
     ]
 
 
 def test_build_paths_qualified_root_with_wrong_type():
-    cert = load_cert_object('mozilla.org.crt')
-    ca = load_cert_object('digicert-sha2-secure-server-ca.crt')
+    cert = load_cert_object('testing-ca-ed25519', 'signer.cert.pem')
+    ca = load_cert_object('testing-ca-ed25519', 'interm.cert.pem')
     other_certs = [ca]
 
     builder = PathBuilder(
@@ -63,7 +63,8 @@ def test_build_paths_qualified_root_with_wrong_type():
 
 def _gen_issuer_candidate_cert(key_identifier, common_name, coords):
     dt = datetime(2019, 9, 10, tzinfo=timezone.utc)
-    pubkey = load_cert_object('mozilla.org.crt').public_key
+    cert_in = load_cert_object('testing-ca-ed25519', 'signer.cert.pem')
+    pubkey = cert_in.public_key
     extensions = [
         x509.Extension(
             {
@@ -114,7 +115,8 @@ def _gen_issuer_candidate_cert(key_identifier, common_name, coords):
 def _gen_subject_candidate_cert(aki, iss_common_name, iss_coords):
     iss_name = x509.Name.build({'common_name': iss_common_name})
     dt = datetime(2019, 9, 10, tzinfo=timezone.utc)
-    pubkey = load_cert_object('mozilla.org.crt').public_key
+    cert_in = load_cert_object('testing-ca-ed25519', 'signer.cert.pem')
+    pubkey = cert_in.public_key
     extensions = [
         x509.Extension(
             {
