@@ -1,5 +1,3 @@
-import asyncio
-import warnings
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any, Dict, Iterable, List, Optional, Union
@@ -361,26 +359,6 @@ class ValidationContext:
         results = await self._revinfo_manager.async_retrieve_crls(cert)
         return [res.crl_data for res in results]
 
-    def retrieve_crls(self, cert):
-        """
-        .. deprecated:: 0.17.0
-            Use :meth:`async_retrieve_crls` instead.
-
-        :param cert:
-            An asn1crypto.x509.Certificate object
-
-        :return:
-            A list of asn1crypto.crl.CertificateList objects
-        """
-
-        warnings.warn(
-            "'retrieve_crls' is deprecated, use 'async_retrieve_crls' instead",
-            DeprecationWarning,
-        )
-        if not self.revinfo_manager.fetching_allowed:
-            return self.revinfo_manager.crls
-        return asyncio.run(self.async_retrieve_crls(cert))
-
     async def async_retrieve_ocsps(self, cert, issuer):
         """
         :param cert:
@@ -397,36 +375,11 @@ class ValidationContext:
         )
         return [res.ocsp_response_data for res in results]
 
-    def retrieve_ocsps(self, cert, issuer):
-        """
-        .. deprecated:: 0.17.0
-            Use :meth:`async_retrieve_ocsps` instead.
-
-        :param cert:
-            An asn1crypto.x509.Certificate object
-
-        :param issuer:
-            An asn1crypto.x509.Certificate object of cert's issuer
-
-        :return:
-            A list of asn1crypto.ocsp.OCSPResponse objects
-        """
-
-        warnings.warn(
-            "'retrieve_ocsps' is deprecated, use "
-            "'async_retrieve_ocsps' instead",
-            DeprecationWarning,
-        )
-
-        if not self.revinfo_manager.fetching_allowed:
-            return self.revinfo_manager.ocsps
-        return asyncio.run(self.async_retrieve_ocsps(cert, issuer))
-
     def record_validation(self, cert, path):
         """
         Records that a certificate has been validated, along with the path that
         was used for validation. This helps reduce duplicate work when
-        validating a ceritifcate and related resources such as CRLs and OCSPs.
+        validating a certificate and related resources such as CRLs and OCSPs.
 
         :param cert:
             An ans1crypto.x509.Certificate object

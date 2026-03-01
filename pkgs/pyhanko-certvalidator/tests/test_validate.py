@@ -855,7 +855,8 @@ def test_fail_validation_if_required_delta_crl_not_available():
         validate_path(context, path)
 
 
-def test_context_retrieve_all_crls():
+@pytest.mark.asyncio
+async def test_context_retrieve_all_crls():
     cert = load_nist_cert('InvaliddeltaCRLTest4EE.crt')
     ca_certs = [load_nist_cert('TrustAnchorRootCertificate.crt')]
     other_certs = [load_nist_cert('deltaCRLCA1Cert.crt')]
@@ -878,8 +879,7 @@ def test_context_retrieve_all_crls():
         weak_hash_algos={'md2', 'md5'},
     )
 
-    with pytest.warns(DeprecationWarning):
-        retrieved_crls = context.retrieve_crls(cert)
+    retrieved_crls = await context.async_retrieve_crls(cert)
     assert {c.dump() for c in retrieved_crls} == {
         crl1.dump(),
         crl2.dump(),
