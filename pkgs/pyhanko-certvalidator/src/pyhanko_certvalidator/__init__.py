@@ -191,7 +191,6 @@ class CertificateValidator:
 
         validated_path = await self.async_validate_path()
         validate_usage(
-            self._context,
             self._certificate,
             key_usage,
             extended_key_usage,

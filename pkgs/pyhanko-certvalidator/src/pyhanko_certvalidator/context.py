@@ -1,9 +1,8 @@
 import asyncio
-import binascii
 import warnings
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Dict, Iterable, List, Optional, Set, Union
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 from asn1crypto import crl, ocsp, x509
 from asn1crypto.util import timezone
@@ -73,7 +72,6 @@ class ValidationContext:
         trust_roots: Optional[TrustRootList] = None,
         extra_trust_roots: Optional[TrustRootList] = None,
         other_certs: Optional[Iterable[x509.Certificate]] = None,
-        whitelisted_certs: Optional[Iterable[Union[bytes, str]]] = None,
         moment: Optional[datetime] = None,
         best_signature_time: Optional[datetime] = None,
         allow_fetching: bool = False,
@@ -113,16 +111,6 @@ class ValidationContext:
             certificates, or a list of asn1crypto.x509.Certificate objects.
             These other certs are usually provided by the service/item being
             validated. In TLS, these would be intermediate chain certs.
-
-        :param whitelisted_certs:
-            None or a list of byte strings or unicode strings of the SHA-1
-            fingerprint of one or more certificates. The fingerprint is a hex
-            encoding of the SHA-1 byte string, optionally separated into pairs
-            by spaces or colons. These whilelisted certificates will not be
-            checked for validity dates. If one of the certificates is an
-            end-entity certificate in a certificate path, any TLS hostname
-            mismatches, key usage errors or extended key usage errors will also
-            be ignored.
 
         :param moment:
             If certificate validation should be performed based on a date and
@@ -235,20 +223,6 @@ class ValidationContext:
                 "best_signature_time is a naive datetime object, meaning the tzinfo "
                 "attribute is not set to a valid timezone"
             )
-
-        self._whitelisted_certs: Set[bytes] = set()
-        if whitelisted_certs is not None:
-            for whitelisted_cert in whitelisted_certs:
-                if isinstance(whitelisted_cert, bytes):
-                    whitelisted_cert = whitelisted_cert.decode('ascii')
-                # Allow users to copy from various OS and browser info dialogs,
-                # some of which separate the hex char pairs via spaces or colons
-                whitelisted_cert = whitelisted_cert.replace(' ', '').replace(
-                    ':', ''
-                )
-                self._whitelisted_certs.add(
-                    binascii.unhexlify(whitelisted_cert.encode('ascii'))
-                )
 
         if algorithm_usage_policy is None:
             if weak_hash_algos is not None:
@@ -372,19 +346,6 @@ class ValidationContext:
         """
 
         return self._soft_fail_exceptions
-
-    def is_whitelisted(self, cert):
-        """
-        Checks to see if a certificate has been whitelisted
-
-        :param cert:
-            An asn1crypto.x509.Certificate object
-
-        :return:
-            A bool - if the certificate is whitelisted
-        """
-
-        return cert.sha1 in self._whitelisted_certs
 
     def _report_soft_fail(self, e: Exception):
         self._soft_fail_exceptions.append(e)

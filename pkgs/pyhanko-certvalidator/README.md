@@ -35,7 +35,6 @@ options, including: validation at a specific moment in time, whitelisting and re
      - Policy mapping
      - Inhibit anyPolicy
    - Failure on unknown/unsupported critical extensions
- - Whitelisting certificates
  - Blacklisting hash algorithms
  - Revocation checks
    - CRLs
