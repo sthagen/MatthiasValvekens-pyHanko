@@ -118,7 +118,7 @@ def test_unpack_cert_content_forbid_pem():
 @pytest.mark.parametrize("content_type", (None, *ACCEPTABLE_PKCS7_DER_ALIASES))
 def test_unpack_cert_content_pkcs7(content_type):
     with open(
-        os.path.join(FIXTURES_DIR, 'certs_to_unpack/acserprorfbv5.p7b'), 'rb'
+        os.path.join(FIXTURES_DIR, 'certs_to_unpack/test.p7b'), 'rb'
     ) as f:
         pkcs7_bytes = f.read()
 
@@ -126,14 +126,14 @@ def test_unpack_cert_content_pkcs7(content_type):
         response_data=pkcs7_bytes,
         content_type=content_type,
         permit_pem=True,
-        url="http://repositorio.serpro.gov.br/cadeias/acserprorfbv5.p7b",
+        url="http://example.com",
     )
-    assert len(list(certs_returned)) == 3
+    assert len(list(certs_returned)) == 2
 
 
 def test_unpack_cert_content_pkcs7_pem():
     with open(
-        os.path.join(FIXTURES_DIR, 'certs_to_unpack/acserprorfbv5.p7.pem'), 'rb'
+        os.path.join(FIXTURES_DIR, 'certs_to_unpack/test.p7b.pem'), 'rb'
     ) as f:
         pkcs7_bytes = f.read()
 
@@ -141,9 +141,9 @@ def test_unpack_cert_content_pkcs7_pem():
         response_data=pkcs7_bytes,
         content_type="any",
         permit_pem=True,
-        url="http://repositorio.serpro.gov.br/cadeias/acserprorfbv5.p7b",
+        url="http://example.com",
     )
-    assert len(list(certs_returned)) == 3
+    assert len(list(certs_returned)) == 2
 
 
 def test_crl_distribution_point_enumeration_skip_ldap():
