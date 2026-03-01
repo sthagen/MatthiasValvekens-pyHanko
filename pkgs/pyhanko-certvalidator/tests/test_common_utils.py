@@ -68,7 +68,8 @@ def test_unpack_content_bad_pkcs7():
 
 def test_unpack_cert_content_pem():
     with open(
-        os.path.join(FIXTURES_DIR, 'digicert-g5-ecc-sha384-2021-ca1.crt'), 'rb'
+        os.path.join(FIXTURES_DIR, 'testing-ca-ed25519', 'interm.cert.pem'),
+        'rb',
     ) as f:
         pem_bytes = f.read()
 
@@ -98,7 +99,8 @@ def test_unpack_cert_content_pem_multiple():
 
 def test_unpack_cert_content_forbid_pem():
     with open(
-        os.path.join(FIXTURES_DIR, 'digicert-g5-ecc-sha384-2021-ca1.crt'), 'rb'
+        os.path.join(FIXTURES_DIR, 'testing-ca-ed25519', 'interm.cert.pem'),
+        'rb',
     ) as f:
         pem_bytes = f.read()
 

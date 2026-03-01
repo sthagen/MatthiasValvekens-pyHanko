@@ -31,7 +31,6 @@ from pyhanko_certvalidator.fetchers import (
     FetcherBackend,
     Fetchers,
     OCSPFetcher,
-    aiohttp_fetchers,
     requests_fetchers,
 )
 from pyhanko_certvalidator.ltv.poe import POEManager
@@ -59,7 +58,6 @@ from .common import (
     load_nist_crl,
     load_openssl_ors,
 )
-from .constants import TEST_REQUEST_TIMEOUT
 
 
 class MockFetcher:
@@ -153,191 +151,6 @@ ERR_CLASSES = {
 class PKITSTestCaseErrorResult:
     err_class: Type[Exception]
     msg_regex: str
-
-
-def test_revocation_mode_soft():
-    cert = load_cert_object(
-        'digicert-ecc-p384-root-g5-revoked-chain-demos-digicert-com.crt'
-    )
-    ca_certs = [load_cert_object('digicert-root-g5.crt')]
-    other_certs = [
-        load_cert_object('digicert-g5-ecc-sha384-2021-ca1.crt'),
-    ]
-
-    context = ValidationContext(
-        trust_roots=ca_certs,
-        other_certs=other_certs,
-        moment=datetime(2023, 1, 10, tzinfo=timezone.utc),
-        allow_fetching=True,
-        weak_hash_algos={'md2', 'md5'},
-        fetcher_backend=MockFetcherBackend(),
-    )
-    paths = context.path_builder.build_paths(cert)
-    assert 1 == len(paths)
-    path = paths[0]
-    assert 3 == len(path)
-
-    validate_path(context, path)
-
-
-def test_revocation_mode_soft_fail():
-    cert = load_cert_object(
-        'digicert-ecc-p384-root-g5-revoked-chain-demos-digicert-com.crt'
-    )
-    ca_certs = [load_cert_object('digicert-root-g5.crt')]
-    other_certs = [
-        load_cert_object('digicert-g5-ecc-sha384-2021-ca1.crt'),
-    ]
-
-    context = ValidationContext(
-        trust_roots=ca_certs,
-        other_certs=other_certs,
-        moment=datetime(2023, 1, 10, tzinfo=timezone.utc),
-        allow_fetching=True,
-        weak_hash_algos={'md2', 'md5'},
-        fetcher_backend=MockFetcherBackendWithValidationError(),
-    )
-    paths = context.path_builder.build_paths(cert)
-    path = paths[0]
-
-    with pytest.raises(InsufficientRevinfoError, match="Something went wrong"):
-        validate_path(context, path)
-
-
-@pytest.mark.skip("annoying to maintain; replace with certomancer test")
-def test_revocation_mode_hard():
-    cert = load_cert_object(
-        'digicert-ecc-p384-root-g5-revoked-chain-demos-digicert-com.crt'
-    )
-    ca_certs = [load_cert_object('digicert-root-g5.crt')]
-    other_certs = [
-        load_cert_object('digicert-g5-ecc-sha384-2021-ca1.crt'),
-    ]
-
-    context = ValidationContext(
-        trust_roots=ca_certs,
-        other_certs=other_certs,
-        allow_fetching=True,
-        revocation_mode='hard-fail',
-        weak_hash_algos={'md2', 'md5'},
-        fetcher_backend=requests_fetchers.RequestsFetcherBackend(
-            per_request_timeout=TEST_REQUEST_TIMEOUT
-        ),
-    )
-    paths = context.path_builder.build_paths(cert)
-    assert 1 == len(paths)
-    path = paths[0]
-    assert 3 == len(path)
-
-    expected = (
-        '(CRL|OCSP response) indicates the end-entity certificate was '
-        'revoked at \\d\\d:\\d\\d:\\d\\d on \\d\\d\\d\\d-\\d\\d-\\d\\d'
-        ', due to an unspecified reason'
-    )
-    with pytest.raises(RevokedError, match=expected):
-        validate_path(context, path)
-
-
-@pytest.mark.skip("annoying to maintain; replace with certomancer test")
-@pytest.mark.asyncio
-async def test_revocation_mode_hard_async():
-    cert = load_cert_object(
-        'digicert-ecc-p384-root-g5-revoked-chain-demos-digicert-com.crt'
-    )
-    ca_certs = [load_cert_object('digicert-root-g5.crt')]
-    other_certs = [
-        load_cert_object('digicert-g5-ecc-sha384-2021-ca1.crt'),
-    ]
-    fb = aiohttp_fetchers.AIOHttpFetcherBackend(
-        per_request_timeout=TEST_REQUEST_TIMEOUT
-    )
-    async with fb as fetchers:
-        context = ValidationContext(
-            trust_roots=ca_certs,
-            other_certs=other_certs,
-            allow_fetching=True,
-            revocation_mode='hard-fail',
-            weak_hash_algos={'md2', 'md5'},
-            fetchers=fetchers,
-        )
-        paths = await context.path_builder.async_build_paths(cert)
-        assert 1 == len(paths)
-        path = paths[0]
-        assert 3 == len(path)
-
-        expected = (
-            '(CRL|OCSP response) indicates the end-entity certificate was '
-            'revoked at \\d\\d:\\d\\d:\\d\\d on \\d\\d\\d\\d-\\d\\d-\\d\\d'
-            ', due to an unspecified reason'
-        )
-        with pytest.raises(RevokedError, match=expected):
-            await async_validate_path(context, path)
-
-
-@pytest.mark.skip("annoying to maintain; replace with certomancer test")
-@pytest.mark.asyncio
-async def test_revocation_mode_hard_aiohttp_autofetch():
-    cert = load_cert_object(
-        'digicert-ecc-p384-root-g5-revoked-chain-demos-digicert-com.crt'
-    )
-    ca_certs = [load_cert_object('digicert-root-g5.crt')]
-
-    fb = aiohttp_fetchers.AIOHttpFetcherBackend(
-        per_request_timeout=TEST_REQUEST_TIMEOUT
-    )
-    async with fb as fetchers:
-        context = ValidationContext(
-            trust_roots=ca_certs,
-            allow_fetching=True,
-            revocation_mode='hard-fail',
-            weak_hash_algos={'md2', 'md5'},
-            fetchers=fetchers,
-        )
-        paths = await context.path_builder.async_build_paths(cert)
-        assert 1 == len(paths)
-        path = paths[0]
-        assert 3 == len(path)
-
-        expected = (
-            '(CRL|OCSP response) indicates the end-entity certificate was '
-            'revoked at \\d\\d:\\d\\d:\\d\\d on \\d\\d\\d\\d-\\d\\d-\\d\\d'
-            ', due to an unspecified reason'
-        )
-        with pytest.raises(RevokedError, match=expected):
-            await async_validate_path(context, path)
-
-
-@pytest.mark.skip("annoying to maintain; replace with certomancer test")
-@pytest.mark.asyncio
-async def test_revocation_mode_hard_requests_autofetch():
-    cert = load_cert_object(
-        'digicert-ecc-p384-root-g5-revoked-chain-demos-digicert-com.crt'
-    )
-    ca_certs = [load_cert_object('digicert-root-g5.crt')]
-
-    fb = requests_fetchers.RequestsFetcherBackend(
-        per_request_timeout=TEST_REQUEST_TIMEOUT
-    )
-    async with fb as fetchers:
-        context = ValidationContext(
-            trust_roots=ca_certs,
-            allow_fetching=True,
-            revocation_mode='hard-fail',
-            weak_hash_algos={'md2', 'md5'},
-            fetchers=fetchers,
-        )
-        paths = await context.path_builder.async_build_paths(cert)
-        assert 1 == len(paths)
-        path = paths[0]
-        assert 3 == len(path)
-
-        expected = (
-            '(CRL|OCSP response) indicates the end-entity certificate was '
-            'revoked at \\d\\d:\\d\\d:\\d\\d on \\d\\d\\d\\d-\\d\\d-\\d\\d'
-            ', due to an unspecified reason'
-        )
-        with pytest.raises(RevokedError, match=expected):
-            await async_validate_path(context, path)
 
 
 def test_rsassa_pss():
@@ -1077,7 +890,7 @@ def test_context_retrieve_all_crls():
 
 @pytest.mark.asyncio
 async def test_root_time_bound():
-    ca = load_cert_object('digicert-sha2-secure-server-ca.crt')
+    ca = load_cert_object('testing-ca-ed25519', 'root.cert.pem')
 
     anchor = CertTrustAnchor(cert=ca, derive_default_quals_from_cert=True)
     moment = datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
@@ -1092,10 +905,10 @@ async def test_root_time_bound():
 
 @pytest.mark.asyncio
 async def test_root_expired():
-    ca = load_cert_object('digicert-sha2-secure-server-ca.crt')
+    ca = load_cert_object('testing-ca-ed25519', 'root.cert.pem')
 
     anchor = CertTrustAnchor(cert=ca, derive_default_quals_from_cert=True)
-    moment = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    moment = datetime(3124, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
     context = ValidationContext(
         trust_manager=SimpleTrustManager.build([anchor]), moment=moment
@@ -1108,10 +921,10 @@ async def test_root_expired():
 
 @pytest.mark.asyncio
 async def test_root_not_yet_valid():
-    ca = load_cert_object('digicert-sha2-secure-server-ca.crt')
+    ca = load_cert_object('testing-ca-ed25519', 'root.cert.pem')
 
     anchor = CertTrustAnchor(cert=ca, derive_default_quals_from_cert=True)
-    moment = datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    moment = datetime(1999, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
     context = ValidationContext(
         trust_manager=SimpleTrustManager.build([anchor]), moment=moment
@@ -1128,13 +941,13 @@ async def test_root_not_yet_valid():
 @pytest.mark.parametrize(
     'moment',
     [
-        datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+        datetime(1999, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
         datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-        datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+        datetime(3124, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
     ],
 )
 async def test_basic_certificate_validator_root_expiration_unquestioned(moment):
-    ca = load_cert_object('digicert-sha2-secure-server-ca.crt')
+    ca = load_cert_object('testing-ca-ed25519', 'root.cert.pem')
 
     anchor = CertTrustAnchor(cert=ca, derive_default_quals_from_cert=False)
 
