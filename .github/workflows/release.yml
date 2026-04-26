@@ -81,8 +81,51 @@ jobs:
         with:
           name: release-body
           path: release.md
-  build:
+  verify-ci:
+    name: Verify CI checks
     needs: [extract-params]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Check CI workflow status for current commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eo pipefail
+
+          check_workflow() {
+            local workflow=$1
+            local conclusion
+            conclusion=$(gh run list \
+              --repo "$GITHUB_REPOSITORY" \
+              --workflow "$workflow" \
+              --commit "$GITHUB_SHA" \
+              --status completed \
+              --json conclusion \
+              --limit 1 \
+              --jq '.[0].conclusion // "not_found"')
+            if [[ "$conclusion" == "success" ]]; then
+              echo "  PASS: $workflow"
+            else
+              echo "  FAIL: $workflow (conclusion: $conclusion)"
+              return 1
+            fi
+          }
+
+          FAILED=0
+          check_workflow "build-pipeline.yml" || FAILED=1
+          check_workflow "static-analysis.yml" || FAILED=1
+
+          if [[ $FAILED -ne 0 ]]; then
+            echo "One or more CI workflows did not pass for commit $GITHUB_SHA"
+            exit 1
+          fi
+          echo "All required CI workflows passed for commit $GITHUB_SHA"
+
+  build:
+    needs: [extract-params, verify-ci]
     name: Build release artifacts
     uses: MatthiasValvekens/pyHanko/.github/workflows/package.yml@master
     permissions:
