@@ -1757,3 +1757,28 @@ def test_sign_appearance_noop():
     r = PdfFileReader(out)
     appearance_new = r.root['/AcroForm']['/Fields'][0]['/AP']['/N'].data
     assert appearance_old == appearance_new
+
+
+@freeze_time('2020-11-01')
+def test_sign_visible_with_separate_annot():
+    out = BytesIO(MINIMAL)
+    w = IncrementalPdfFileWriter(out)
+    field_spec = fields.SigFieldSpec(
+        sig_field_name='Sig1',
+        combine_annotation=False,
+        box=(20, 20, 80, 40),
+    )
+    fields.append_signature_field(w, sig_field_spec=field_spec)
+    w.write_in_place()
+
+    w = IncrementalPdfFileWriter(out)
+    meta = signers.PdfSignatureMetadata(field_name='Sig1')
+    signer = signers.PdfSigner(signature_meta=meta, signer=FROM_CA)
+    signer.sign_pdf(w, in_place=True)
+
+    r = PdfFileReader(out)
+    emb = r.embedded_signatures[0]
+    assert emb.field_name == 'Sig1'
+    assert '/AP' not in emb.sig_field
+    assert '/AP' in emb.sig_field['/Kids'][0]
+    val_trusted(emb)
