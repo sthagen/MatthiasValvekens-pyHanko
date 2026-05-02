@@ -6,6 +6,68 @@ Release history
 pyHanko
 -------
 
+.. _release-0.35.0:
+
+0.35.0
+=====
+
+*Release date:* 2026-05-03
+
+
+Breaking changes
+----------------
+
+ * Remove support for deprecated LTV validation functionality.
+   Call sites must be updated to use the
+   :ref:`AdES validation engine <ades-ltv-validation>`.
+ * Several low-level API changes in :mod:`~pyhanko.sign.validation.generic_cms`
+   to allow refactoring the timestamp handling code.
+
+    * ``extract_tst_data()`` was removed.
+    * ``compute_signature_tst_digest()`` was removed.
+    * Several functions that previously took a digest to validate against
+      have been changed to take a ``(str) -> bytes`` callable.
+
+
+Dependency changes
+------------------
+
+ * Bump ``cryptography`` to ``47.0.0``.
+ * Relax upper bound on ``pytest-cov`` to ``<7.2``.
+ * Relax upper bound on ``certomancer`` to ``<0.15``.
+ * Introduce ``certifi`` as a mandatory dependency for testing.
+
+
+New features and enhancements
+-----------------------------
+
+Validation
+^^^^^^^^^^
+
+ * Properly support harvesting PoE from multiple signature/content timestamps in the same signature container.
+ * For the purposes of validation status reporting: if there are multiple signature timestamps, accept any one that
+   passes validation (this is appropriate since the main value of timestamps is evidentiary). At some point in the
+   future, we may want to add a way to report on the status of all timestamps>
+ * Add revinfo archival data to local knowledge.
+ * Restructure algorithm policy handling. Algorithm policy errors will typically not bubble up outside
+   the validation engine anymore, but will instead be reflected in the validation status.
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+ * Replace FreeSerif usage in tests with SourceSerif
+ * Tweak ``MediaBox`` retrieval.
+
+
+Bugs fixed
+----------
+
+ * Fix ``/AP`` positioning on field creation.
+ * Fix annot dict not being re-serialised on signing when split from form dictionary.
+ * Improve error handling in ``parse_pdf_date``.
+ * Fix handling of PoE requirements in past validation data.
+
+
 .. _release-0.34.1:
 
 0.34.1
@@ -2498,8 +2560,21 @@ Initial release.
 pyhanko-certvalidator
 ---------------------
 
+.. _certvalidator-release-0.31.0:
 
-.. _release-0.30.2:
+0.31.0
+======
+
+*Release date:* 2026-05-03
+
+ * Bump ``cryptography`` to ``47.0.0``.
+ * Always short-circuit OCSP fetching if no URLs.
+ * Tests and testability fixes for AdES TS handling.
+ * Get rid of unnecessary ``async`` marker on ``get_session()`` in the ``aiohttp`` fetcher.
+ * Align default certs with certifi for ``aiohttp`` usage.
+
+
+.. _certvalidator-release-0.30.2:
 
 0.30.2
 ======
@@ -2511,7 +2586,7 @@ causing OCSP responses to fail to be processed if the responder certificate's
 subject key identifier is not generated in the standard way.
 
 
-.. _release-0.30.1:
+.. _certvalidator-release-0.30.1:
 
 0.30.1
 ======
@@ -3174,6 +3249,20 @@ The impact on the high-level API should be small to nonexistent, but caution whe
 -----------
 pyhanko-cli
 -----------
+
+.. _cli-release-0.4.0:
+
+0.4.0
+=====
+
+*Release date:* 2026-05-03
+
+
+ * Introduce ``addsig identity`` subcommand to allow recalling the parameters for specific ``addsign``
+   subcommands from configuration (incubating).
+ * Genericise password prompting in CLI.
+ * Remove legacy LTV validation code, including all associated CLI hooks.
+
 
 .. _cli-release-0.3.1:
 

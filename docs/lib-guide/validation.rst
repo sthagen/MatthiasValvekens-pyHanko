@@ -163,6 +163,8 @@ bundled with the library.
             print(status.pretty_print_details())
 
 
+.. _ades-ltv-validation:
+
 Long-term verifiability checking
 --------------------------------
 
