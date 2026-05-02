@@ -1760,17 +1760,24 @@ def test_sign_appearance_noop():
 
 
 @freeze_time('2020-11-01')
-def test_sign_visible_with_separate_annot():
+@pytest.mark.parametrize('presign_ap', ['present', 'removed'])
+def test_sign_visible_with_separate_annot(presign_ap):
     out = BytesIO(MINIMAL)
     w = IncrementalPdfFileWriter(out)
     field_spec = fields.SigFieldSpec(
         sig_field_name='Sig1',
         combine_annotation=False,
+        empty_field_appearance=False,
         box=(20, 20, 80, 40),
     )
     fields.append_signature_field(w, sig_field_spec=field_spec)
     w.write_in_place()
 
+    if presign_ap == 'removed':
+        w = IncrementalPdfFileWriter(out)
+        del w.root['/AcroForm']['/Fields'][0]['/Kids'][0]['/AP']
+        w.update_container(w.root['/AcroForm']['/Fields'][0]['/Kids'][0])
+        w.write_in_place()
     w = IncrementalPdfFileWriter(out)
     meta = signers.PdfSignatureMetadata(field_name='Sig1')
     signer = signers.PdfSigner(signature_meta=meta, signer=FROM_CA)
@@ -1781,4 +1788,5 @@ def test_sign_visible_with_separate_annot():
     assert emb.field_name == 'Sig1'
     assert '/AP' not in emb.sig_field
     assert '/AP' in emb.sig_field['/Kids'][0]
+    assert b'Digitally signed' in emb.sig_field['/Kids'][0]['/AP']['/N'].data
     val_trusted(emb)
