@@ -26,7 +26,7 @@ try:
 
     pkcs11_available = True
 except ImportError:  # pragma: nocover
-    pkcs11 = None
+    pkcs11 = None  # type: ignore
     pkcs11_available = False
 
 
