@@ -65,6 +65,7 @@ from pyhanko_testing_commons.test_data.samples import (
     MINIMAL_ONE_FIELD,
     PDF_DATA_DIR,
     TESTING_CA,
+    TESTING_CA_MLDSA,
     VECTOR_IMAGE_PDF,
 )
 from pyhanko_testing_commons.test_utils.signing_commons import (
@@ -76,7 +77,8 @@ from pyhanko_testing_commons.test_utils.signing_commons import (
     FROM_ECC_CA,
     FROM_ED448_CA,
     FROM_ED25519_CA,
-    FROM_MLDSA_CA,
+    MLDSA_INTERM_CERT,
+    MLDSA_ROOT_CERT,
     REVOKED_SIGNER,
     SELF_SIGN,
     TRUST_ROOTS,
@@ -1478,12 +1480,24 @@ def test_ed25519():
 
 
 @freeze_time('2020-11-01')
-def test_mldsa44():
+@pytest.mark.parametrize(
+    'signer_label', ['signer1', 'signer1_65', 'signer1_87']
+)
+def test_mldsa44(signer_label):
+    signer = signers.SimpleSigner(
+        signing_cert=TESTING_CA_MLDSA.get_cert(CertLabel(signer_label)),
+        signing_key=TESTING_CA_MLDSA.key_set.get_private_key(
+            KeyLabel(signer_label)
+        ),
+        cert_registry=SimpleCertificateStore.from_certs(
+            [MLDSA_ROOT_CERT, MLDSA_INTERM_CERT]
+        ),
+    )
     w = IncrementalPdfFileWriter(BytesIO(MINIMAL))
     out = signers.sign_pdf(
         w,
         signers.PdfSignatureMetadata(field_name='Sig1'),
-        signer=FROM_MLDSA_CA,
+        signer=signer,
     )
     r = PdfFileReader(out)
     s = r.embedded_signatures[0]

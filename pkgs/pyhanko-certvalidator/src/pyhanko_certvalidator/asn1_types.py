@@ -118,7 +118,7 @@ def _pqc_setup():
 
     key_algo_reverse_map = keys.PublicKeyAlgorithmId._reverse_map
 
-    if key_algo_reverse_map is not None:
+    if key_algo_reverse_map is not None:  # pragma: nocover
         key_algo_reverse_map['mldsa44'] = '2.16.840.1.101.3.4.3.17'
         key_algo_reverse_map['mldsa65'] = '2.16.840.1.101.3.4.3.18'
         key_algo_reverse_map['mldsa87'] = '2.16.840.1.101.3.4.3.19'

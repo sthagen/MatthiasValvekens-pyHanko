@@ -74,13 +74,6 @@ FROM_DSA_CA = signers.SimpleSigner(
         [DSA_ROOT_CERT, DSA_INTERM_CERT]
     ),
 )
-FROM_MLDSA_CA = signers.SimpleSigner(
-    signing_cert=TESTING_CA_MLDSA.get_cert(CertLabel('signer1')),
-    signing_key=TESTING_CA_MLDSA.key_set.get_private_key(KeyLabel('signer1')),
-    cert_registry=SimpleCertificateStore.from_certs(
-        [MLDSA_ROOT_CERT, MLDSA_INTERM_CERT]
-    ),
-)
 FROM_ED25519_CA = signers.SimpleSigner(
     signing_cert=TESTING_CA_ED25519.get_cert(CertLabel('signer1')),
     signing_key=TESTING_CA_ED25519.key_set.get_private_key(KeyLabel('signer1')),
